@@ -1,0 +1,21 @@
+#!/bin/bash
+echo "Checking U-25..."
+FILES=$(find / \
+  -path /proc -prune -o \
+  -path /sys -prune -o \
+  -path /run -prune -o \
+  -path /dev -prune -o \
+  -type f -perm -2 ! -perm -1000 2>/dev/null  | \
+  grep -v '^/proc' | \
+  grep -v '^/sys' | \
+  grep -v '^/run' | \
+  grep -v '^/dev')
+
+RESULT=$(echo "$FILES" | wc -l)
+echo "Result : $RESULT"
+if [ "$RESULT" -gt 0 ]; then
+  echo "VULNERABLE (world writable files without sticky bit found: $RESULT)"
+  echo "$FILES"
+else
+  echo "SAFE (no vulnerable world writable files found)"
+fi

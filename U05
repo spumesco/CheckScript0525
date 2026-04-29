@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "Checking U-05..."
+RESULT=$(grep ':0:' /etc/passwd | grep -v '^root:' | wc -l)
+
+echo "Result : $RESULT"
+if [ "$RESULT" -gt 1 ]; then
+  echo "VULNERABLE (UID 0 accounts found: $RESULT)"
+else
+  echo "SAFE (only root has UID 0)"
+fi
